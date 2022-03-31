@@ -9,5 +9,4 @@ const verifyToken = require('../src/middlewares/verifyToken');
 router.post('/register', registerValidator, validatorHelper, authController.register);
 router.post('/login', loginValidator, validatorHelper, authController.login);
 router.use(verifyToken);
-
 module.exports = router;

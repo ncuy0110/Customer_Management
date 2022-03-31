@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
 const connectDB = require('./src/configs/connectDB');
-require('dotenv').config();
-const ENV = process.env;
-const PORT = ENV.PORT;
+
+const config = require('./src/configs/config');
+
 const route = require('./routes');
 
 const cors = require('cors');
@@ -49,6 +49,6 @@ app.use((err, req, res, next) => {
    });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(config.PORT, () => {
+    console.log(`Server running on port ${config.PORT}`);
 });

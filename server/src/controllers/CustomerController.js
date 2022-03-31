@@ -17,6 +17,22 @@ class CustomerController {
         }
     }
 
+    async findCustomerById(req, res) {
+        try{
+            const id = req.params.id;
+            const response = await customerService.findCustomerById(id);
+            return res.status(200).json(response);
+        }catch (err){
+            console.log(err);
+            return res.status(500).json({
+                status: 500,
+                error: 1,
+                message: err.message,
+                data: null
+            })
+        }
+    }
+
     async createCustomer(req, res) {
         try{
             const userId = req.payload.id;
@@ -69,6 +85,24 @@ class CustomerController {
         }
     }
 
+    async searchCustomer(req, res) {
+        try{
+            const {name} = req.body;
+            const user_id = req.payload.id;
+            const response = await customerService.searchCustomer({name, user_id});
+            return res.status(200).json(response);
+        } catch (err){
+            console.log(err);
+            return res.status(500).json({
+                status: 500,
+                error: 1,
+                message: err.message,
+                data: null
+            });
+        }
+    }
 }
+
+
 
 module.exports = new CustomerController();

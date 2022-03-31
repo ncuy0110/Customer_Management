@@ -1,4 +1,5 @@
 const db = require('../models/index');
+const Sequelize = require('sequelize');
 
 class CustomerRepository {
     async getAllCustomer(userId) {
@@ -11,8 +12,26 @@ class CustomerRepository {
         return customers;
     }
 
+    async findCustomerById(id) {
+        const customer = await db.customer.findOne({
+            where: {
+                id: id
+            },
+            attributes: {exclude: ['user_id']}
+        });
+        return customer;
+    }
+
     async create({name, address, gender, birthday, job_title, phone, userId}) {
-        const newCustomer = await db.customer.create({name, address, gender, birthday, job_title, phone, user_id: userId});
+        const newCustomer = await db.customer.create({
+            name,
+            address,
+            gender,
+            birthday,
+            job_title,
+            phone,
+            user_id: userId
+        });
         return newCustomer;
     }
 
@@ -35,7 +54,7 @@ class CustomerRepository {
         )
     }
 
-    async delete({id, user_id}){
+    async delete({id, user_id}) {
         return await db.customer.destroy({
             where: {
                 user_id: user_id,
@@ -44,16 +63,25 @@ class CustomerRepository {
         });
     }
 
-    // async search(name, user_id){
-    //     return await db.customer.findAll({
-    //         where: {
-    //             name: {
-    //                 [Sequelize.Op.like]: `%${name}%`
-    //             },
-    //             user_id: user_id
-    //         }
-    //     });
-    // }
+    async search({name, user_id}) {
+        return await db.customer.findAll({
+            where: {
+                name: {
+                    [Sequelize.Op.like]: `%${name}%`
+                },
+                user_id: user_id
+            }
+        });
+    }
+
+    async findCustomerByUser({id, user_id}) {
+        return await db.customer.findOne({
+            where: {
+                id: id,
+                user_id: user_id
+            }
+        })
+    }
 }
 
 module.exports = new CustomerRepository();

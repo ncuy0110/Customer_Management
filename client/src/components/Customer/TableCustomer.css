@@ -1,0 +1,22 @@
+
+.tableData {
+    width: 80%;
+    margin: 30px auto 0;
+}
+
+.btnAdd {
+    float: left;
+    width: 170px;
+}
+
+.btnSearch {
+    width: 100px;
+}
+
+.inputSearch {
+    align-items: end;
+}
+
+div .search {
+    float: right;
+}

@@ -10,7 +10,7 @@ export default function TableCustomer({auth, customers, setCustomers}) {
         let response = null;
 
         async function fetchData() {
-            response = await customerApi.getAll(localStorage.getItem('accessToken'));
+            response = await customerApi.getAll();
         }
 
         fetchData().then(r => setCustomers(response.data.customers));
@@ -25,7 +25,11 @@ export default function TableCustomer({auth, customers, setCustomers}) {
     }
 
     const handleSearch = async () => {
-        const response = await customerApi.search(name);
+        let response;
+        if (name === '')
+            response = await customerApi.getAll();
+        else
+            response = await customerApi.search(name);
         if (response.status === 200) {
             const data = response.data;
             setCustomers(data.customers);
@@ -45,7 +49,7 @@ export default function TableCustomer({auth, customers, setCustomers}) {
                 <input
                     className="inputSearch"
                     onKeyPress={handleKeyPress}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={async (e) => setName(e.target.value)}
                     type="name"
                     placeholder="Enter customer's name"/>
                 <button className="btnSearch" onClick={handleSearch}>Search</button>
@@ -67,10 +71,10 @@ export default function TableCustomer({auth, customers, setCustomers}) {
                     <TableBody>
                         {
 
-                            customers?
+                            customers ?
                                 customers.map((customer) => (
                                     <Customer customer={customer}/>
-                                )):''
+                                )) : ''
                         }
                     </TableBody>
                 </Table>

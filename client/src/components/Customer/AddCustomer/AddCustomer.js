@@ -7,26 +7,27 @@ import customerApi from '../../../api/customerApi';
 export default function AddCustomer({auth}) {
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
-    const [gender, setGender] = useState(true);
     const [birthday, setBirthday] = useState();
     const [jobTitle, setJobTitle] = useState('');
     const [phone, setPhone] = useState('');
     const [warningText, setWarningText] = useState('');
-    const [selectedOption, setSelectedOption] = useState(1);
+    const [selectedOption, setSelectedOption] = useState({
+        value: true,
+        label: 'Male'
+    });
 
     const navigate = useNavigate();
 
-    const options = [{value: 1, label: 'Male'}, {value: 0, label: 'Female'}]
+    const options = [{value: true, label: 'Male'}, {value: false, label: 'Female'}]
 
     if (auth.token == null) return <Navigate to="/login"/>
     const handleAdd = async () => {
-        setGender(selectedOption === 1 ? true : false);
         const response = await customerApi.create({
             token: auth.token,
             name,
             phone,
             birthday,
-            gender,
+            gender: selectedOption.value,
             address,
             job_title: jobTitle
         })
@@ -50,7 +51,7 @@ export default function AddCustomer({auth}) {
         <lable><b>Gender</b></lable>
         <Select
             options={options}
-            defaultValue={{value: 1, label: 'Male'}}
+            defaultValue={{value: true, label: 'Male'}}
             onChange={handleChange}/>
         <br/>
 

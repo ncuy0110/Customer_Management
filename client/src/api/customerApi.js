@@ -1,15 +1,16 @@
 import axiosClient from './axiosClient';
+import {ACCESS_TOKEN} from '../constants/authConstants';
 
 const customerApi = {
-    getAll: (token) => {
+    getAll: () => {
         const url = '/customers';
-        return axiosClient.get(url, {headers: {Authorization: token}})
+        return axiosClient.get(url, {headers: {Authorization: localStorage.getItem(ACCESS_TOKEN)}})
     },
     getById: (id) => {
         const url = '/customers/' + id;
         return axiosClient.get(url, {
             headers: {
-                Authorization: localStorage.getItem('accessToken')
+                Authorization: localStorage.getItem(ACCESS_TOKEN)
             }
         });
     },
@@ -21,7 +22,7 @@ const customerApi = {
             headers: {Authorization: token}
         })
     },
-    update: (id, token, name, address, gender, birthday, job_title, phone) => {
+    update: ({id, name, address, gender, birthday, job_title, phone}) => {
         const url = '/customers/' + id;
         return axiosClient.put(url, {
             name,
@@ -32,7 +33,7 @@ const customerApi = {
             phone
         }, {
             headers: {
-                Authorization: token
+                Authorization: localStorage.getItem('accessToken')
             }
         });
     },

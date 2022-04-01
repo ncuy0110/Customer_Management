@@ -1,10 +1,15 @@
 import {connect} from 'react-redux';
 import EditCustomer from '../../components/Customer/EditCustomer';
+import {setCustomers} from '../../actions/customerAction';
 
 const mapStateToProps = (state) => {
     return {
-        auth: state.auth
+        currentCustomer: state.customer.current
     }
 }
 
-export default connect(mapStateToProps, null)(EditCustomer);
+const mapActionToProps = {
+    setCustomers
+}
+
+export default connect(mapStateToProps, mapActionToProps)(EditCustomer);

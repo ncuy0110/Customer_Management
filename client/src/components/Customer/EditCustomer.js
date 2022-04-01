@@ -1,44 +1,40 @@
-import {Link, Navigate, useNavigate, useParams} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import React, {useState} from 'react';
 import './AddCustomer/AddCustomer.css';
 import Select from 'react-select';
 import customerApi from '../../api/customerApi';
 
-let customer;
-
-export default function EditCustomer({auth}) {
-
-    const {id} = useParams();
-    console.log(id);
-
-    const [name, setName] = useState(customer.name);
-    const [address, setAddress] = useState(customer.address);
-    const [gender, setGender] = useState(customer.gender);
-    const [birthday, setBirthday] = useState(customer.birthday);
-    const [jobTitle, setJobTitle] = useState(customer.job_title);
-    const [phone, setPhone] = useState(customer.phone);
+export default function EditCustomer({currentCustomer}) {
+    const [name, setName] = useState(currentCustomer.name);
+    const [address, setAddress] = useState(currentCustomer.address);
+    const [birthday, setBirthday] = useState(currentCustomer.birthday);
+    const [jobTitle, setJobTitle] = useState(currentCustomer.job_title);
+    const [phone, setPhone] = useState(currentCustomer.phone);
     const [warningText, setWarningText] = useState('');
-    const [selectedOption, setSelectedOption] = useState(1);
+    const [selectedOption, setSelectedOption] = useState({
+        value: currentCustomer.gender,
+        label: currentCustomer.gender ? 'Male' : 'Female'
+    });
 
     const navigate = useNavigate();
 
 
-    const options = [{value: 1, label: 'Male'}, {value: 0, label: 'Female'}]
+    const options = [{value: true, label: 'Male'}, {value: false, label: 'Female'}]
 
-    if (auth.token == null) return <Navigate to="/login"/>
     const handleEdit = async () => {
-        setGender(selectedOption === 1 ? true : false);
+        console.log(selectedOption);
         const response = await customerApi.update({
-            token: auth.token,
+            id: currentCustomer.id,
             name,
             phone,
             birthday,
-            gender,
+            gender: selectedOption.value,
             address,
             job_title: jobTitle
         })
-        if(response.status === 200) navigate('/');
-        else {
+        if (response.status === 200) {
+            navigate('/');
+        } else {
             setWarningText(response.error.replaceAll('_', ' '));
         }
     }
@@ -49,26 +45,33 @@ export default function EditCustomer({auth}) {
 
     return (<div className="addForm">
         <label><b>Name</b></label>
-        <input type="text" onChange={e => setName(e.target.value)} placeholder="Your name"/> <br/>
+        <input type="text" defaultValue={currentCustomer.name} onChange={e => setName(e.target.value)}
+               placeholder="Your name"/> <br/>
 
         <label><b>Address</b></label>
-        <input type="text" onChange={e => setAddress(e.target.value)} placeholder="Your address"/> <br/>
+        <input type="text" defaultValue={currentCustomer.address} onChange={e => setAddress(e.target.value)}
+               placeholder="Your address"/> <br/>
 
         <lable><b>Gender</b></lable>
         <Select
             options={options}
-            defaultValue={{value: 1, label: 'Male'}}
+            defaultValue={{
+                value: currentCustomer.gender, label: currentCustomer.gender ? 'Male' : 'Female'
+            }}
             onChange={handleChange}/>
         <br/>
 
         <label><b>Birthday</b></label>
-        <input type="text" onChange={e => setBirthday(e.target.value)} placeholder="Your birthday"/> <br/>
+        <input type="text" defaultValue={currentCustomer.birthday} onChange={e => setBirthday(e.target.value)}
+               placeholder="Your birthday"/> <br/>
 
         <label><b>Phone</b></label>
-        <input type="text" onChange={e => setPhone(e.target.value)} placeholder="Your phone number"/> <br/>
+        <input type="text" defaultValue={currentCustomer.phone} onChange={e => setPhone(e.target.value)}
+               placeholder="Your phone number"/> <br/>
 
         <label><b>Job Title</b></label>
-        <input type="text" onChange={e => setJobTitle(e.target.value)} placeholder="Your job title"/> <br/>
+        <input type="text" defaultValue={currentCustomer.job_title} onChange={e => setJobTitle(e.target.value)}
+               placeholder="Your job title"/> <br/>
         <b>{warningText}</b><br/>
 
         <button onClick={handleEdit}>Edit</button>

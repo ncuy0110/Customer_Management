@@ -7,9 +7,10 @@ import {useEffect} from 'react';
 import AddCustomer from './containers/Customer/AddCustomer';
 import EditCustomer from './containers/Customer/EditCustomer';
 
-export default function App({auth, loginSuccess}) {
+export default function App({auth, loginSuccess, setCustomers}) {
     const handleLogout = () => {
         loginSuccess({token: null, username: ''});
+        setCustomers([]);
     }
     useEffect(() => {
         loginSuccess({token: localStorage.getItem('accessToken'), username: localStorage.getItem('username')});
@@ -31,7 +32,7 @@ export default function App({auth, loginSuccess}) {
                 <Route path="/signup" element={<SignUp/>}/>
                 <Route path="/" element={<TableCustomer/>}/>
                 <Route path="/customers/new" element={<AddCustomer/>}/>
-                <Route path="customers/edit/:id" element={<EditCustomer/>}/>
+                <Route path="/customers/edit/" element={<EditCustomer/>}/>
             </Routes>
         </div>);
 }

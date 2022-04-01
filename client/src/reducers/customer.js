@@ -1,7 +1,8 @@
-import {ADD_CUSTOMER, SET_CUSTOMERS} from '../constants/customerConstants';
+import {ADD_CUSTOMER, SET_CURRENT_CUSTOMER, SET_CUSTOMERS} from '../constants/customerConstants';
 
 const initialState = {
-    items: []
+    items: [],
+    current: null
 }
 
 const customerReducer = (state = initialState, action) => {
@@ -15,6 +16,11 @@ const customerReducer = (state = initialState, action) => {
             return {
                 ...state,
                 items: [...state.items, action.payload]
+            }
+        case SET_CURRENT_CUSTOMER:
+            return {
+                ...state,
+                current: action.payload
             }
         default:
             return state;

@@ -3,7 +3,7 @@ import customerApi from '../../api/customerApi';
 import './Customer.css';
 import {useNavigate} from 'react-router-dom';
 
-export default function Customer({customer, customers, setCustomers}) {
+export default function Customer({customer, customers, setCustomers, setCurrentCustomer}) {
     const handleDelete = async () => {
         const response = await customerApi.delete(customer.id, localStorage.getItem('accessToken'));
         customers = customers.filter(function (item) {
@@ -16,11 +16,8 @@ export default function Customer({customer, customers, setCustomers}) {
     let navigate = useNavigate();
 
     const handleEdit = () => {
-        navigate('/customers/edit/', {
-            params: {
-                id: customer.id
-            }
-        });
+        setCurrentCustomer(customer);
+        navigate(`/customers/edit/`);
     }
 
     return <TableRow
